@@ -1,9 +1,11 @@
-#include "SDL.h"
-
+#include "SDLSetup.h"
 #undef main
 
 int main(){
-	SDL_Init(SDL_INIT_EVERYTHING);
+	Engine::SDLSetup();
+
+
+
 
 	return 0;
 }
