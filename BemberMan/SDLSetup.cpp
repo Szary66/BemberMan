@@ -1,66 +1,34 @@
 #include "SDLSetup.h"
-#include <iostream>
 
 namespace Engine{
 	int Error(const char* message){
 		return MessageBox(NULL, message, "Error!", MB_OK);
 	}
 
-	SDLSetup::SDLSetup()
-		:width(800), height(600), display(nullptr), renderer(nullptr), fullScreen(false){
-		if(SDL_Init(SDL_INIT_EVERYTHING) == -1){
-			Error("CAN'T INIT SDL!");
-			EXIT_FAILURE;
-		}
-	/*	if(TTF_Init() != 0){
-			Error("Can't init TTF!");
-		}*/
-		SetWindowPosition();
-
-		renderer = SDL_CreateRenderer(display, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-		if(renderer == nullptr){
-			Error("Can't create renderer!");
-			exit(1);
-		}
-	}
-
-
-	SDLSetup::~SDLSetup(){
-		SDL_DestroyRenderer(renderer);
-		SDL_DestroyWindow(display);
-
+	SDLSetup::~SDLSetup(){		
 		SDL_Quit();
 	}
 
-
-	const int &SDLSetup::Width()const{
-		return width;
+	int SDLSetup::InitSDL(){
+		if(InitMainSDL() || InitTTF())
+			return -1;
+		return 0;
 	}
 
-
-	const int &SDLSetup::Height()const{
-		return height;
-	}
-
-
-	void SDLSetup::SetWindowPosition(){
-		//load ();
-
-		if(fullScreen)
-			display = SDL_CreateWindow("ROJO GAME", 0, 0, width, height, SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN);
-		else{
-			display = SDL_CreateWindow("ROJO GAME", 50, 50, width, height, SDL_WINDOW_SHOWN);
+	int SDLSetup::InitMainSDL(){
+		if(SDL_Init(SDL_INIT_EVERYTHING) == -1){
+			Error("CAN'T INIT SDL!");
+			return -1;
 		}
-
-		if(display == nullptr){
-			Error("CAN'T CREATE WINDOW! \n display = null");
-			exit(1);
-		}
+		return 0;
 	}
 
-
-	SDL_Renderer* SDLSetup::Renderer()const{
-		return renderer;
+	int SDLSetup::InitTTF(){
+		if(TTF_Init() != 0){
+			Error("Can't init TTF!");
+			return -1;
+		}
+		return 0;
 	}
 
 	//
